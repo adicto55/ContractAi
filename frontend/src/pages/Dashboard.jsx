@@ -1,6 +1,5 @@
 import { useState } from "react";
 import UploadZone from "../components/UploadZone";
-import Stats from "../components/Stats";
 import Loader from "../components/Loader";
 import ResultCard from "../components/ResultCard";
 
@@ -125,15 +124,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Stats */}
-      <div style={{ marginTop: 40 }}>
-        <div style={{ marginBottom: 16 }}>
-          <div style={{ fontSize: 13, fontWeight: 500, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            Platform Stats
-          </div>
-        </div>
-        <Stats />
-      </div>
+
     </div>
   );
 }

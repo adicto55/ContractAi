@@ -47,7 +47,6 @@ export default function About() {
       <div className="features-grid">
         {FEATURES.map((f) => (
           <div key={f.title} className="feature-card animate-in">
-            <div className="feature-icon">{f.icon}</div>
             <div className="feature-title">{f.title}</div>
             <div className="feature-desc">{f.desc}</div>
           </div>
@@ -58,10 +57,10 @@ export default function About() {
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 20 }}>
         {[
-          { label: "Documents analyzed", value: "2M+" },
-          { label: "Active users", value: "14,000+" },
-          { label: "Languages supported", value: "30+" },
-          { label: "Uptime SLA", value: "99.9%" },
+          { label: "Documents analyzed", value: "2" },
+          { label: "Active users", value: "1" },
+          { label: "Languages supported", value: "0" },
+          { label: "Uptime SLA", value: "?" },
         ].map((s) => (
           <div key={s.label} className="stat-card" style={{ textAlign: "center" }}>
             <div className="stat-value" style={{ fontSize: 36, marginBottom: 6 }}>{s.value}</div>
