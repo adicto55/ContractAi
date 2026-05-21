@@ -1,33 +1,33 @@
-import React from "react";
-import Home from "./pages/Home";
+import { useState } from "react";
+import "./styles/main.css";
+import Navbar from "./components/Navbar";
+import Dashboard from "./pages/Dashboard";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
 
-function App() {
+export default function App() {
+  const [page, setPage] = useState("dashboard");
+
+  const renderPage = () => {
+    if (page === "about") return <About />;
+    if (page === "contact") return <Contact />;
+    return <Dashboard />;
+  };
+
   return (
     <div>
-      <Home />
-    </div>
-  );
-}
-
-export default App;
-export default function App() {
-  return (
-    <div className="container">
-      <h1>AI Document Analyzer</h1>
-
-      <div className="card">
-        <div className="upload-box">
-          📄 Drop your file here or click to upload
+      <Navbar page={page} setPage={setPage} />
+      <main>{renderPage()}</main>
+      <footer>
+        <div className="footer">
+          <span className="footer-text">© 2026 DocAI. All rights reserved.</span>
+          <nav className="footer-links">
+            <a className="footer-link" href="#privacy">Privacy</a>
+            <a className="footer-link" href="#terms">Terms</a>
+            <a className="footer-link" href="#docs">API docs</a>
+          </nav>
         </div>
-
-        <button className="button">
-          Analyze Document
-        </button>
-
-        <div className="result">
-          AI result will appear here...
-        </div>
-      </div>
+      </footer>
     </div>
   );
 }
