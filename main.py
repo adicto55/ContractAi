@@ -1,10 +1,10 @@
 import os
 import json
-from typing import List
+from typing import List, Optional
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from groq import Groq
-import fitz
+import fitz  
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -21,7 +21,7 @@ app.add_middleware(
 )
 
 def extract_text_from_pdf(file_bytes):
-    """Helper function to read PDF text."""
+    """Helper function to extract text from a PDF file."""
     text = ""
     with fitz.open(stream=file_bytes, filetype="pdf") as doc:
         for page in doc:
@@ -36,10 +36,21 @@ async def upload_document(file: UploadFile = File(...)):
     return {"message": "File uploaded successfully", "filename": file.filename}
 
 @app.post("/api/analyze")
-async def analyze_contract(files: List[UploadFile] = File(...)):
-    if not files:
-        raise HTTPException(status_code=400, detail="No files received.")
-    target_file = files[0]
+async def analyze_contract(
+    file: Optional[UploadFile] = File(None), 
+    files: Optional[List[UploadFile]] = File(None)
+):
+    target_file = None
+    if file:
+        target_file = file
+    elif files and len(files) > 0:
+        target_file = files[0]
+        
+    if not target_file:
+        raise HTTPException(
+            status_code=400, 
+            detail="No file received. Make sure the frontend sends form-data with the key 'file' or 'files'."
+        )
 
     if not target_file.filename.endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Please upload a PDF file.")
@@ -47,6 +58,7 @@ async def analyze_contract(files: List[UploadFile] = File(...)):
     try:
         pdf_content = await target_file.read()
         contract_text = extract_text_from_pdf(pdf_content)
+
         if len(contract_text) > 25000:
             contract_text = contract_text[:25000]
         response = client.chat.completions.create(
@@ -70,6 +82,7 @@ async def analyze_contract(files: List[UploadFile] = File(...)):
             ],
             response_format={"type": "json_object"}
         )
+
         analysis = json.loads(response.choices[0].message.content)
         return analysis
 
